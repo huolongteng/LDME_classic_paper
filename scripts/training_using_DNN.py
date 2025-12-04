@@ -41,7 +41,7 @@ test_size = 0.2
 
 # Training hyperparameters
 batch_size = 64
-num_epochs = 20
+num_epochs = 4
 learning_rate = 5e-5
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -56,11 +56,16 @@ _X_full, _y_full = loader.load()
 X_sub, y_sub = loader.sample_subset(zero_count=zero_count, one_count=one_count)
 X_train, X_test, y_train, y_test = loader.split(X_sub, y_sub, test_size=test_size)
 
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 # Convert numpy arrays to PyTorch tensors
 X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
 y_train_tensor = torch.tensor(y_train, dtype=torch.long)
 X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
 y_test_tensor = torch.tensor(y_test, dtype=torch.long)
+
 
 # Create TensorDataset and DataLoader for batching
 train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
@@ -78,7 +83,7 @@ class DNN(nn.Module):
 
     def __init__(self, input_size: int = 2381, dropout_rate: float = 0.1):
         super().__init__()
-        hidden_sizes = [4096, 2048, 1024, 512]
+        hidden_sizes = [512, 256]
         num_classes = 2
 
         layers = []
