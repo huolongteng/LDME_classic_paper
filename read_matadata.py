@@ -1,6 +1,6 @@
 import numpy as np
 
-filename = 'matadata/bodmas.npz'
+filename = 'metadata/bodmas.npz'
 data = np.load(filename)
 X = data['X']  # all the feature vectors
 y = data['y']  # labels, 0 as benign, 1 as malicious
